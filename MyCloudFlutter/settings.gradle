@@ -1,0 +1,13 @@
+include ':app'
+setBinding(new Binding([gradle: this]))
+evaluate(new File(
+  settingsDir,
+  '../cloud_flutter/.android/include_flutter.groovy'
+))
+rootProject.name = "CloudFlutter"
+
+include ':cloud_flutter'
+project(':cloud_flutter').projectDir = new File('../cloud_flutter')
+
+include ':cloud_flutter'
+project(':cloud_flutter').projectDir = new File('../cloud_flutter')
