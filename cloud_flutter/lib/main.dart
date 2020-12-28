@@ -61,22 +61,47 @@ class _MyHomePageState extends State<MyHomePage> {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage('images/login_bg.png'),
-            fit: BoxFit.fill
           )
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            RaisedButton(
-              onPressed: () {
+        child: Container(
+          //通过ConstrainedBox来确保Stack占满屏幕
+          child: ConstrainedBox(
+            constraints: BoxConstraints.expand(),
+            child: Stack(
+              alignment:Alignment.center , //指定未定位或部分定位widget的对齐方式
+              children: <Widget>[
+                Container(child: Text("Hello world",
+                    style: TextStyle(color: Colors.white)),
+                  color: Colors.red,
+                ),
+                Positioned(
+                  top: 30,
+                  left: 10,
+                  child: Text(
+                    "您好",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 32
+                    ),
+                  ),
 
-              },
-              child: new Text("调用新1的原生界面"),
+                ),
+                Positioned(
+                  top: 80.0,
+                  left: 10,
+                  child:Text(
+                    "欢迎登录博汇乐课",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20
+                    ),
+                  ),
+                )
+              ],
             ),
-            Text("收到的值为: 0"),
-          ],
-        ),
+          )
       ),
+    )
     );
   }
 }
