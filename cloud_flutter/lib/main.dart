@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'Utils/httpUtils/ServiceNetApi.dart';
+
 void main() => runApp(MyApp());
 
 
@@ -97,7 +99,18 @@ class _MyHomePageState extends State<MyHomePage> {
     if(_focusNodePassWord.hasFocus) {
       _focusNodeUserName.unfocus();
     }
+  }
 
+  void getData() async {
+    Map<String, String> params = Map();
+    params['Id'] = "123456789";
+    params['Name'] = "jackson影琪";
+    await ServiceNetApi().getSingleDataById(params).then((json) {
+      print('getSingleDataById');
+      print(json);
+    }).catchError((e) {
+
+    });
   }
 
 
