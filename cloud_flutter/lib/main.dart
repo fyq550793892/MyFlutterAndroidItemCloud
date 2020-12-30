@@ -103,8 +103,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void getData() async {
     Map<String, String> params = Map();
-    params['Id'] = "123456789";
-    params['Name'] = "jackson影琪";
+    params['phone'] = "15330026521";
+    params['validTime'] = "1";
+    print('getSingleDataById1');
     await ServiceNetApi().getSingleDataById(params).then((json) {
       print('getSingleDataById');
       print(json);
@@ -231,7 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   // icon: Icon((_isShowPwd) ? Icons.visibility : Icons.visibility_off,),
                   onPressed: () {
                     setState(() {
-
+                      getData();
                     });
                 },
                 ),

@@ -8,9 +8,9 @@ class ServiceNetApi {
   ///获取用户信息
   Future<Map> getSingleDataById(data) async {
     return await DioNetUtils().request<String>(
-        "/**/**/yingqi/**/getSingleDataById",
+        "/api/user/sendMsg",
         queryParameters: data,
-        method:Method.put
+        method:Method.get
     );
   }
 }

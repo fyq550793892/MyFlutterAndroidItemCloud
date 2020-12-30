@@ -18,9 +18,9 @@ class DioNetUtils {
 
   DioNetUtils._init() {
     BaseOptions options = new BaseOptions(
-      baseUrl: "http://192.168.1.19:8880",
-      connectTimeout: 1000 * 1,
-      receiveTimeout: 1000 * 2,
+      baseUrl: "http://lecmini.bhlec.com",
+      connectTimeout: 1000 * 1000,
+      receiveTimeout: 1000 * 2000,
       //Http请求头.
       headers: {
         //do something
