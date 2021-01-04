@@ -4,10 +4,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(MyApp1());
 
 
-class MyApp extends StatelessWidget {
+class MyApp1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(

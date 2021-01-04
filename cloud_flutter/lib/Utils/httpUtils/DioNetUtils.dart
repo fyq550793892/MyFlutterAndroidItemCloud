@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import '../SQToast.dart';
 import 'Method.dart';
@@ -98,19 +99,24 @@ class DioNetUtils {
 
     _printHttpLog(response);
     if (response.statusCode == 200) {
+      var data = response.data;
+      Map<String, dynamic> dataMap = json.decode(data);//将json转成map
+      print("请求数据为：$data");
       try {
-        if (response.data is Map) {
-          if (response.data["httpCode"] != 200) {
-            SQToast.show(response.data["message"]);
+        if (dataMap is Map) {
+          print("请求数据为：map");
+          if (dataMap["status"] != 0) {
+            SQToast.show(dataMap["message"]);
             return new Future.error(new DioError(
               response: response,
               type: DioErrorType.RESPONSE,
             ));
           }
           // 由于不同的接口返回的格式不固定不规范，所以需要根据接口格式自定义.
-          return response.data['data'];
+          return dataMap;
         } else {
-          if (response.data is List) {
+          if (dataMap is List) {
+            print("请求数据为：list");
             Map<String, dynamic> _dataMap = Map();
             _dataMap["data"] = response.data;
             return _dataMap;

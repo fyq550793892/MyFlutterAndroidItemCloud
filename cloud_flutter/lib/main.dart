@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'Models/login_entity.dart';
 import 'Utils/httpUtils/ServiceNetApi.dart';
+import 'main_activity.dart';
 
 void main() => runApp(MyApp());
 
@@ -101,16 +103,38 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void getData() async {
+  //获取验证码
+  void getCodeData(String phone) async {
     Map<String, String> params = Map();
-    params['phone'] = "15330026521";
+    params['phone'] = phone;
     params['validTime'] = "1";
-    print('getSingleDataById1');
-    await ServiceNetApi().getSingleDataById(params).then((json) {
-      print('getSingleDataById');
-      print(json);
+    print("phone= $phone");
+    await ServiceNetApi().getCodeData(params).then((json) {
+      print("验证码的数据为：$json");
     }).catchError((e) {
 
+    });
+  }
+
+  //请求登录
+  void requestLogin(int type, String phone, String codeNum) async {
+    Map<String, String> params = Map();
+    params["type"] = type.toString();
+    params['identifier'] = phone;
+    params['credential'] = codeNum;
+    print("验证码为$codeNum");
+    await ServiceNetApi().loginRequest(params).then((json) {
+      print("登录请求");
+      print(json);
+      var loginEntity = new LoginEntity.fromJson(json);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MyApp1()),
+      );
+
+    }).catchError((e) {
+      print(e.toString());
     });
   }
 
@@ -125,6 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
      * 验证用户名
      */
     String validateUserName(value){
+      print("进入验证用户名");
       // 正则匹配手机号
       RegExp exp = RegExp(r'^((13[0-9])|(14[0-9])|(15[0-9])|(16[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))\d{8}$');
       if (value.isEmpty) {
@@ -141,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
     String validatePassWord(value){
       if (value.isEmpty) {
         return '密码不能为空';
-      }else if(value.trim().length<6 || value.trim().length>18){
+      }else if(value.trim().length<6){
         return '密码长度不正确';
       }
       return null;
@@ -189,6 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget inputTextArea = new Container(
       margin: EdgeInsets.only(left: 20, right: 20),
       child: Form(
+        key: _formKey,
         child: Column(
           children: <Widget>[
             TextFormField(
@@ -213,11 +239,13 @@ class _MyHomePageState extends State<MyHomePage> {
               validator: validateUserName,
               //保存数据
               onSaved: (String value){
+                print("进入保存数据");
                 _username = value;
               },
             ),
             TextFormField(
               focusNode: _focusNodePassWord,
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: "密码",
                 hintText: "请输入密码",
@@ -232,7 +260,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   // icon: Icon((_isShowPwd) ? Icons.visibility : Icons.visibility_off,),
                   onPressed: () {
                     setState(() {
-                      getData();
+                      //只有输入通过验证，才会执行这里
+                      _formKey.currentState.save();
+                      getCodeData(_username);
                     });
                 },
                 ),
@@ -262,7 +292,9 @@ class _MyHomePageState extends State<MyHomePage> {
           if(_formKey.currentState.validate()) {
             //只有输入通过验证，才会执行这里
             _formKey.currentState.save();
-
+            setState(() {
+              requestLogin(2, _username, _password);
+            });
           }
         },
         color: Colors.blue,
@@ -294,10 +326,6 @@ class _MyHomePageState extends State<MyHomePage> {
              inputTextArea,
             new SizedBox(height: ScreenUtil().setHeight(80),),
             loginButtonArea,
-            // new SizedBox(height: ScreenUtil().setHeight(60),),
-            // thirdLoginArea,
-            // new SizedBox(height: ScreenUtil().setHeight(60),),
-            // bottomArea,
           ],
         ),
       ),
